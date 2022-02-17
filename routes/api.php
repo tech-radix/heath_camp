@@ -55,7 +55,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get("/showadmin/{id}",[userController::class,'showadmin']);
     Route::post("/insertadmin",[userController::class,'insertadmin']);
     Route::post("/updateadmin",[userController::class,'updateadmin']);
-    //Route::get("/deleteuser/{id}",[userController::class,'deleteuser']);
+    Route::get("/deleteuser/{id}",[userController::class,'deleteuser']);
 
 });
 //With auth token
