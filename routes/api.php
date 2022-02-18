@@ -33,7 +33,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get("/showcamps",[campController::class,'showcamps']);
     Route::get("/showcamp/{camp_id}",[campController::class,'showcamp']);
     Route::post("/insertcamps",[campController::class,'insertcamps']);
-    Route::post("/updatecamp",[campController::class,'updatcamp']);
+    Route::post("/updatecamp",[campController::class,'updatecamp']);
     Route::get("/deletecamp/{camp_id}",[campController::class,'deletecamp']);
 
     //processes apis
@@ -55,7 +55,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get("/showadmin/{id}",[userController::class,'showadmin']);
     Route::post("/insertadmin",[userController::class,'insertadmin']);
     Route::post("/updateadmin",[userController::class,'updateadmin']);
-    Route::get("/deleteuser/{id}",[userController::class,'deleteuser']);
+    Route::get("/inactiveadmin/{id}",[userController::class,'inactiveadmin']);
+    Route::get("/activeadmin/{id}",[userController::class,'activeadmin']);
 
 });
 //With auth token

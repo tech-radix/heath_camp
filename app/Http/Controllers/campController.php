@@ -12,12 +12,20 @@ class campcontroller extends Controller
     //
     function showcamps(Request $request)
     {
-        $camp = Camp::all()->toArray();
-        $response = [
-            'success' => true,
-            'result' => $camp
-        ];
-        return response($response, 200);
+        $camp = Camp::all();
+        if(count($camp)){
+            $response = [
+                'success' => true,
+                'result' => $camp
+            ];
+            return response($response, 200);
+        }else{
+            $response = [
+                'success' => false,
+                'result' => 'No camp found.'
+            ];
+            return response($response, 400);
+        }
     }
     function showcamp($camp_id)
     {  

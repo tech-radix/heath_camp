@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Validator;
 
@@ -161,7 +162,10 @@ class userController extends Controller
     }
     function deleteuser($id)
     {  
-        $deleted = DB::table('users')->where('id', '=', $id)->delete();
+        $deleted = DB::table('users')->where([
+            ['id', '=', $id],
+            ['type', '!=', 'Admin'],
+        ])->delete();
         $response = [
             'success' => true,
             'result' => 'Data deleted'
@@ -171,7 +175,7 @@ class userController extends Controller
     function showadmins()
     {
         $user = User::select('id','name','mobile','username','password','status')
-        ->where('type', '!=', 'Admin')->get();
+        ->where('type', '=', 'Admin')->get();
         if(count($user)){
             $response = [
                 'success' => true,
@@ -222,11 +226,12 @@ class userController extends Controller
             return response($response, 400);
         }else{
             $user = new User;
-            $user->username = $request->camp_id;
+            $user->username = $request->username;
             $user->name = $request->name;
-            $user->mobile = $request->status;
-            $user->password = $request->mobile;
-            $user->status = $request->id_proofe_type;
+            $user->mobile = $request->mobile;
+            $user->password = Hash::make($request->password);
+            $user->status = $request->status;
+            $user->type = 'Admin';
             $user->save();
             $response = [
                 'success' => true,
@@ -235,7 +240,29 @@ class userController extends Controller
             return response($response, 200);
         }
     }
-    function updateadmin(Request $request)
+    function inactiveadmin($id)
+    {  
+        $deleted = DB::table('users')
+        ->where('id', $id)
+        ->update(['status' => 'Inactive']);
+        $response = [
+            'success' => true,
+            'result' => 'Admin Inactivated'
+        ];
+        return response($response, 200);
+    }
+    function activeadmin($id)
+    {  
+        $deleted = DB::table('users')
+        ->where('id', $id)
+        ->update(['status' => 'Active']);
+        $response = [
+            'success' => true,
+            'result' => 'Admin activated'
+        ];
+        return response($response, 200);
+    }
+    /*function updateadmin(Request $request)
     {
         $rules = array(
             'username'=>'required',
@@ -278,5 +305,5 @@ class userController extends Controller
                 return response($response, 400);
             }
         }
-    }
+    }*/
 }

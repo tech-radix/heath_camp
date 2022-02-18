@@ -12,12 +12,20 @@ class docterController extends Controller
     //
     function showdocters(Request $request)
     {
-        $docter = Docter::all()->toArray();
-        $response = [
-            'success' => true,
-            'result' => $docter
-        ];
-        return response($response, 200);
+        $docter = Docter::all();
+        if(count($docter)){
+            $response = [
+                'success' => true,
+                'result' => $docter
+            ];
+            return response($response, 200);
+        }else{
+            $response = [
+                'success' => false,
+                'result' => 'No docter found.'
+            ];
+            return response($response, 400);
+        }
     }
     function showdocter($docter_id)
     {  
@@ -87,7 +95,7 @@ class docterController extends Controller
             if(count($docter)){
                 $affected = DB::table('Docters')
                 ->where('doctor_id', $request->docter_id)
-                ->update(['doctor_name' => $request->name,'registration_no' => $request->registration_no,'doctor_status' => $request->doctor_status]);
+                ->update(['doctor_name' => $request->name,'registration_no' => $request->registrationno,'doctor_status' => $request->status]);
                 $response = [
                     'success' => true,
                     'result' => 'Docter data updated'

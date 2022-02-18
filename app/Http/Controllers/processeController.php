@@ -13,11 +13,19 @@ class processeController extends Controller
     function showprocesses(Request $request)
     {
         $processe = Processe::all()->toArray();
-        $response = [
-            'success' => true,
-            'result' => $processe
-        ];
-        return response($response, 200);
+        if(count($processe)){
+            $response = [
+                'success' => true,
+                'result' => $processe
+            ];
+            return response($response, 200);
+        }else{
+            $response = [
+                'success' => false,
+                'result' => 'No process found.'
+            ];
+            return response($response, 400);
+        }
     }
     function showprocess($process_id)
     {  
