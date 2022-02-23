@@ -82,13 +82,17 @@ class userController extends Controller
     }
     function insertuser(Request $request)
     {
-        $rules = array(
+        /*$rules = array(
             'camp_id'=>'required|integer',
             'name' => 'required',
             'mobile' => 'required|integer',
             'id_proofe_type'=>'required',
             'id_proof_no' => 'required',
             'status' => 'required'
+        );*/
+        $rules = array(
+            'name' => 'required',
+            'mobile' => 'required|integer'
         );
         $validator = Validator::make($request->all(),$rules);
         if($validator->fails()){
@@ -99,12 +103,23 @@ class userController extends Controller
             return response($response, 400);
         }else{
             $user = new User;
-            $user->camp_id = $request->camp_id;
+            if($req->has('camp_id')){
+                $user->camp_id = $request->camp_id;
+            }
             $user->name = $request->name;
-            $user->status = $request->status;
+            if($req->has('status')){
+                $user->status = $request->status;
+            }
             $user->mobile = $request->mobile;
-            $user->id_proofe_type = $request->id_proofe_type;
-            $user->id_proof_no = $request->id_proof_no;
+            if($req->has('whatsup_mobile')){
+                $user->whatsup_mobile = $request->whatsup_mobile;
+            }
+            if($req->has('id_proofe_type')){
+                $user->id_proofe_type = $request->id_proofe_type;
+            }
+            if($req->has('id_proof_no')){
+                $user->id_proof_no = $request->id_proof_no;
+            }
             $user->save();
             $response = [
                 'success' => true,
@@ -119,9 +134,9 @@ class userController extends Controller
             'camp_id'=>'required|integer',
             'name' => 'required',
             'mobile' => 'required|integer',
+            'whatsup_mobile' => 'required|integer',
             'id_proofe_type'=>'required',
             'id_proof_no' => 'required',
-            'status' => 'required',
             'id' => 'required|integer'
         );
         $validator = Validator::make($request->all(),$rules);
@@ -142,6 +157,7 @@ class userController extends Controller
                     ['camp_id' => $request->admin_id,
                     'name' => $request->name,
                     'mobile' => $request->mobile,
+                    'whatsup_mobile' => $request->whatsup_mobile,
                     'id_proofe_type' => $request->id_proofe_type,
                     'id_proof_no' => $request->id_proof_no,
                     'status' => $request->status,
@@ -174,7 +190,7 @@ class userController extends Controller
     }
     function showadmins()
     {
-        $user = User::select('id','name','mobile','username','password','status')
+        $user = User::select('id','name','mobile','username','password','status','role')
         ->where('type', '=', 'Admin')->get();
         if(count($user)){
             $response = [
@@ -192,7 +208,7 @@ class userController extends Controller
     }
     function showadmin($id)
     {
-        $user = User::select('id','name','mobile','username','password','status')
+        $user = User::select('id','name','mobile','username','password','status','role')
         ->where('id', '=', $id)->get();
         if(count($user)){
             $response = [
@@ -215,7 +231,8 @@ class userController extends Controller
             'name' => 'required',
             'mobile' => 'required|integer',
             'password'=>'required',
-            'status' => 'required'
+            'status' => 'required',
+            'role' => 'required'
         );
         $validator = Validator::make($request->all(),$rules);
         if($validator->fails()){
